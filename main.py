@@ -15,9 +15,13 @@ model = ChatterboxTTS.from_pretrained(device=device)
 
 OUTPUT_DIR = "outputs"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+from pydantic import BaseModel
+
+class TTSRequest(BaseModel):
+    text: str
 @app.post("/tts")
-def tts(text: str):
-    wav = model.generate(text)
+def tts(request: TTSRequest):
+    wav = model.generate(request.text)
     filename = f"{uuid.uuid4()}.wav"
     path = os.path.join(OUTPUT_DIR, filename)
     ta.save(path, wav, model.sr)
