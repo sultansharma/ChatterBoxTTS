@@ -1,0 +1,23 @@
+name: Deploy to RunPod
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: SSH into RunPod and deploy
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.HOST }}
+        username: root
+        key: ${{ secrets.RUNPOD_SSH_KEY }}
+        port: 39347
+        script: |
+          cd /workspace/ChatterBoxTTS
+          git pull
+          pkill -f "uvicorn main:app" || true
+          nohup uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &
