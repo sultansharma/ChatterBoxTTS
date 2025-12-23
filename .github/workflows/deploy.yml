@@ -12,10 +12,10 @@ jobs:
     - name: SSH into RunPod and deploy
       uses: appleboy/ssh-action@v0.1.6
       with:
-        host: ${{ secrets.HOST }}
-        username: root
-        key: ${{ secrets.RUNPOD_SSH_KEY }}
-        port: 25763
+        host: ssh.runpod.io
+        username: k0ae2fcgvyqy7h-64411556
+        key: ${{secrets.SSH_KEY}}
+        port: 22
         script: |
           cd /workspace/ChatterBoxTTS
           git pull
