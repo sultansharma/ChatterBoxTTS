@@ -18,7 +18,8 @@ jobs:
         port: 22
         script: |
           cd /workspace/ChatterBoxTTS
-          git pull
+          git fetch origin
+          git reset --hard origin/master
           pkill -f "uvicorn main:app" || true
           nohup uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &
-        pty: false
+       
