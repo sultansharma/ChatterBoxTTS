@@ -4,24 +4,28 @@ import torchaudio as ta
 import torch
 import uuid
 import os
+from pydantic import BaseModel
 
-from chatterbox.tts import ChatterboxTTS
+# Use multilingual model
+from chatterbox.mtl_tts import ChatterboxMultilingualTTS
 
 app = FastAPI()
 
 # Load model once
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model = ChatterboxTTS.from_pretrained(device=device)
+model = ChatterboxMultilingualTTS.from_pretrained(device=device)
 
 OUTPUT_DIR = "outputs"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-from pydantic import BaseModel
 
 class TTSRequest(BaseModel):
     text: str
+    language: str = "hi"  # default to Hindi
+
 @app.post("/tts")
 def tts(request: TTSRequest):
-    wav = model.generate(request.text)
+    # Specify language
+    wav = model.generate(request.text, language_id=request.language)
     filename = f"{uuid.uuid4()}.wav"
     path = os.path.join(OUTPUT_DIR, filename)
     ta.save(path, wav, model.sr)
@@ -29,5 +33,5 @@ def tts(request: TTSRequest):
 
 from fastapi.staticfiles import StaticFiles
 
-#Hello Serve index.html and any other static files from this folder
+# Serve index.html and static files
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
