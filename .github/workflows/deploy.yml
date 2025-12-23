@@ -15,7 +15,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: root
         key: ${{ secrets.RUNPOD_SSH_KEY }}
-        port: 39347
+        port: 25763
         script: |
           cd /workspace/ChatterBoxTTS
           git pull
