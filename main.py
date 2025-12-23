@@ -25,5 +25,5 @@ def tts(text: str):
 
 from fastapi.staticfiles import StaticFiles
 
-# Serve index.html and any other static files from this folder
+#Hello Serve index.html and any other static files from this folder
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
